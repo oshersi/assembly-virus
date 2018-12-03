@@ -1,7 +1,11 @@
-# Project Title
+# assembly virus 
 
-One Paragraph of project description goes here
-
+A sample overwritting virus in assembly x86 that will overwrite every COM file in it's
+ directory.
+The target operating system are DOS . 
+There are two extremely broad categories, these being Resident and
+  Nonresident viruses.
+  In this case the virus works with TSR - Terminate and Stay Resident . 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
