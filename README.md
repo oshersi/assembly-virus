@@ -3,7 +3,7 @@
 A sample overwritting virus in assembly x86 that will overwrite every COM file in it's
  directory.
 The target operating system are DOS . 
-;There are two extremely broad viruses categories  , these being Resident and
+There are two extremely broad viruses categories  , these being Resident and
   Nonresident viruses.
   In this case the virus works with TSR - Terminate and Stay Resident . 
 ## Getting Started
