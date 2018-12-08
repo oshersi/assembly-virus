@@ -1,7 +1,8 @@
 
 .model tiny
+include data.asm
 include Macro.asm ; the macro help Routines 
-include Functions.asm 
+include Functions.asm  
 .code
 ;defines where the machine code place in memory
 ;100H says that the machine code starts from address (offset) 100h in this segment ,For .com format the offset is always 100H
