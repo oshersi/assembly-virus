@@ -9,6 +9,7 @@ include Functions.asm
 ;Another example is ORG 7C00H for intel exe program format.
 org 100h 
 start:
+   ;for debuging..
    ;mov dl,'A' ; print 'A'
    ;mov ah,2h
    ;int 21h
