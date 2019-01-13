@@ -28,5 +28,6 @@ sJumpUpdated db "Jump Instruction Added...", 0
 sAlreadyInfected db "File is already infected...",0
 hookdone db "The ISR is hook the virus are TSR",0
 newisr db "Install New ISR..",0
+finish db "finish to install the virus",0
 db "File Handle:"
 wHostFileHandle dw ? ;handle of the host file
