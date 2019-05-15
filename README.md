@@ -28,7 +28,17 @@ Installation of Turbo Assembler  is simple and is done with the help of Windows 
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+The virus will be run in a DOSBOX environment  , is actually a virtual DOS operating system 
+after its installation the link down below , Open a folder and make a muont that will be the main path of DOSBOX More details about this, can be seen in the next link :
+(https://www.dosbox.com/wiki/MOUNT)
+for example -
+```
+Z:\>MOUNT C C:\DOSGAMES
+```
+
+After performing all the steps above, insert the virus file into the main folder of Dosbox, along with the COM files that the virus will infect when it runs.
+
+
 
 ```
 Give the example
@@ -72,7 +82,7 @@ Please read [CONTRIBUTING.md](https://github.com/oshersi/assembly-virus/commits?
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer]http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
 ## Authors
 
