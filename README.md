@@ -15,7 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-The virus runs in the DOSBOX environment and therefore needs to be installed, and in order to analyze its effects, I recommend analyzing the files with the HEX editor.
+The virus runs in the DOSBOX environment and therefore DOSBOX  needs to be installed, and in order to analyze its effects, I recommend analyzing the files with the HEX editor.
 
 The development environment of the virus is Turbo Assembler, which is able to compile and link all parts of the code.
 
