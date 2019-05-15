@@ -23,9 +23,12 @@ The development environment of the virus is Turbo Assembler, which is able to co
 3) Open all of the .asm files with the environment when the virus is compiled from the main file 
 
 
-A step by step series of examples that tell you how to get a development env running
+Installation of Turbo Assembler  is simple and is done with the help of Windows installation .
 
-Say what the step will be
+
+## Running the tests
+
+Explain how to run the automated tests for this system
 
 ```
 Give the example
@@ -37,11 +40,6 @@ And repeat
 until finished
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
 
 ### Break down into end to end tests
 
