@@ -18,7 +18,7 @@ The development environment of the virus is Turbo Assembler, which is able to co
 
 ### Installing
 
-1) Download Turbo Assembler, the links are here below .
+1) Download Turbo Assembler and install it, the links are here below .
 2) clone this repository to  the local computer
 3) Open all of the .asm files with the environment when the virus is compiled from the main file 
 
@@ -67,11 +67,10 @@ Add additional notes about how to deploy this on a live system
 
 * [Turbo Assembler](https://sourceforge.net/projects/guitasm8086/) - The framework used
 * [HxD](https://mh-nexus.de/en/hxd/) - Binary file editor
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/oshersi/assembly-virus/commits?author=oshersi) for details on my code of conduct .
 
 ## Versioning
 
