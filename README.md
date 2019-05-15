@@ -25,6 +25,8 @@ The development environment of the virus is Turbo Assembler, which is able to co
 2) clone this repository to  the local computer
 3) Open all of the .asm files with the environment when the virus is compiled from the main file 
 
+![compile button](https://github.com/oshersi/assembly-virus/blob/master/asdasd.png)
+
 
 Installation of Turbo Assembler  is simple and is done with the help of Windows installation .
 
@@ -43,6 +45,7 @@ Z:\>MOUNT C C:\DOSGAMES
 After performing all the steps above, insert the virus file into the main folder of Dosbox, along with the COM files that the virus will infect when it runs.
 A few com files can be found in the following link : <br/>
 (https://www.hiren.info/downloads/dos-files)
+
 
 
 ```
