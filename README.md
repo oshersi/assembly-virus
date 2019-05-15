@@ -23,7 +23,7 @@ The development environment of the virus is Turbo Assembler, which is able to co
 </br></br>
 ![turbo](https://github.com/oshersi/assembly-virus/blob/master/dddd.png)
 
-### Installing
+### Installing and compilation
 
 1) Download Turbo Assembler and install it, the links are here below .
 2) clone this repository to  the local computer
@@ -33,8 +33,9 @@ The development environment of the virus is Turbo Assembler, which is able to co
 
 
 Installation of Turbo Assembler  is simple and is done with the help of Windows installation .
-
-
+</br>
+You can also compile and link all the files together in the DOSBOX more details in the next link :
+(https://www.instructables.com/id/How-to-run-TASM-and-Compile-x86-Assembly-Program-i/)
 ## Running the tests
 
 The virus will be run in a DOSBOX environment  , is actually a virtual DOS operating system 
