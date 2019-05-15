@@ -19,6 +19,8 @@ The virus runs in the DOSBOX environment and therefore DOSBOX  needs to be insta
 ![dosbox](https://github.com/oshersi/assembly-virus/blob/master/dosbox.png)
 
 The development environment of the virus is Turbo Assembler, which is able to compile and link all parts of the code.
+</br></br>
+![turbo](https://github.com/oshersi/assembly-virus/blob/master/dddd.png)
 
 ### Installing
 
