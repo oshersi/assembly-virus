@@ -14,6 +14,7 @@ These instructions will get you a copy of the project up and running on your loc
 </br> Please refer to the license for terms and use permissions .
 </br> The above .asm files contain the code, where main.exe is the final product after the compile 
  .
+
 ### Prerequisites
 
 The virus runs in the DOSBOX environment and therefore DOSBOX  needs to be installed, and in order to analyze its effects, I recommend analyzing the files with the HEX editor. </br> </br>
@@ -25,7 +26,7 @@ The development environment of the virus is Turbo Assembler, which is able to co
 
 ### Installing and compilation
 
-1) Download Turbo Assembler and install it, the links are here below .
+1) Download Turbo Assembler and install it, the [links](#Built) are here below .
 2) clone this repository to  the local computer
 3) Open all of the .asm files with the environment when the virus is compiled from the main file 
 
@@ -73,7 +74,7 @@ Give an example
 ```
 
 
-
+<h2 id="Built"></h2>
 ## Built With
 
 * [Turbo Assembler](https://sourceforge.net/projects/guitasm8086/) - The framework used
