@@ -29,7 +29,7 @@ The development environment of the virus is Turbo Assembler, which is able to co
 1) Download Turbo Assembler and install it, the [links](#Built) are here below .
 2) clone this repository to  the local computer
 3) Open all of the .asm files with the environment when the virus is compiled from the main file 
-
+4) Click on the button as in the image below to crumple, object file and run will appear after in the same folder .
 ![compile button](https://github.com/oshersi/assembly-virus/blob/master/asdasd.png)
 
 
