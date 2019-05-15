@@ -12,13 +12,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+The virus runs in the DOSBOX environment and therefore needs to be installed, and in order to analyze its effects, I recommend analyzing the files with the HEX editor.
 
-```
-Give examples
-```
+The development environment of the virus is Turbo Assembler, which is able to compile and link all parts of the code.
 
 ### Installing
+
+1) Download Turbo Assembler, the links are here below .
+2) clone this repository to  the local computer
+3) Open all of the .asm files with the environment when the virus is compiled from the main file 
+
 
 A step by step series of examples that tell you how to get a development env running
 
@@ -62,8 +65,8 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
+* [Turbo Assembler](https://sourceforge.net/projects/guitasm8086/) - The framework used
+* [HxD](https://mh-nexus.de/en/hxd/) - Binary file editor
 * [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 ## Contributing
