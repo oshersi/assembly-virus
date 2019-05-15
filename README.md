@@ -38,7 +38,8 @@ Z:\>MOUNT C C:\DOSGAMES
 ```
 
 After performing all the steps above, insert the virus file into the main folder of Dosbox, along with the COM files that the virus will infect when it runs.
-
+A few com files can be found in the following link : <br/>
+(https://www.hiren.info/downloads/dos-files)
 
 
 ```
@@ -60,13 +61,6 @@ Explain what these tests test and why
 Give an example
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 
 ## Built With
@@ -78,25 +72,9 @@ Give an example
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/oshersi/assembly-virus/commits?author=oshersi) for details on my code of conduct .
-
-## Versioning
-
-We use [SemVer]http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+Please read [contributors](https://github.com/oshersi/assembly-virus/commits?author=oshersi) for details on my code of conduct .
 
 ## License
+This project is for research and study only. Permission to use this project is only to indicate above, do not use and exploit this project adversely.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
 
