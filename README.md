@@ -6,9 +6,12 @@ The target operating system are DOS .
 There are two extremely broad viruses categories  , these being Resident and
   Nonresident viruses.
   In this case the virus works with TSR - Terminate and Stay Resident . 
+  The virus has two modes when it runs from a host file and when it runs as a separate file.
+  The virus encrypts itself when it pastes another file and decrypts it when it runs from a pasted file.
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
+</br> Please refer to the license for terms and use permissions .
 
 ### Prerequisites
 
