@@ -12,7 +12,8 @@ There are two extremely broad viruses categories  , these being Resident and
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 </br> Please refer to the license for terms and use permissions .
-
+</br> The above .asm files contain the code, where main.exe is the final product after the compile 
+ .
 ### Prerequisites
 
 The virus runs in the DOSBOX environment and therefore DOSBOX  needs to be installed, and in order to analyze its effects, I recommend analyzing the files with the HEX editor. </br> </br>
