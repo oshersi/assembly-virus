@@ -31,6 +31,7 @@ Installation of Turbo Assembler  is simple and is done with the help of Windows 
 The virus will be run in a DOSBOX environment  , is actually a virtual DOS operating system 
 after its installation the link down below , Open a folder and make a muont that will be the main path of DOSBOX More details about this, can be seen in the next link :
 (https://www.dosbox.com/wiki/MOUNT)
+<br/>
 for example -
 ```
 Z:\>MOUNT C C:\DOSGAMES
@@ -67,14 +68,13 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
 * [Turbo Assembler](https://sourceforge.net/projects/guitasm8086/) - The framework used
 * [HxD](https://mh-nexus.de/en/hxd/) - Binary file editor
+* [DosBox](https://www.dosbox.com/download.php?main=1) - Test environment
+
 
 ## Contributing
 
