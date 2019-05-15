@@ -76,5 +76,6 @@ Please read [contributors](https://github.com/oshersi/assembly-virus/commits?aut
 
 ## License
 This project is for research and study only. Permission to use this project is only to indicate above, do not use and exploit this project adversely.
+This project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
