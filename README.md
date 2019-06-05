@@ -75,8 +75,10 @@ after :
 ![output2](https://github.com/oshersi/assembly-virus/blob/master/output3.png)
 <br>
 You can see that after the infection, when running the SYS file the virus routine opens and then the original routine of the file, in this case a simple output - incorrect DOS version
-
-
+<br><br>
+When opening files (SYS before and after) by HEX Editor, you can see the signature of the virus at the beginning of the file, when the virus has retained the original bits of the host and once the control is restored to the host file the virus will restore them .
+![output2](https://github.com/oshersi/assembly-virus/blob/master/HEXCOMPARE.png) <br>
+To the left is the original file to the right the file after infection
 
 ### Built With
 
