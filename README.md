@@ -78,7 +78,8 @@ You can see that after the infection, when running the SYS file the virus routin
 
 
 
-<h2 id="Built"> Built With</h2>
+### Built With
+
 * [Turbo Assembler](https://sourceforge.net/projects/guitasm8086/) - The framework used
 * [HxD](https://mh-nexus.de/en/hxd/) - Binary file editor
 * [DosBox](https://www.dosbox.com/download.php?main=1) - Test environment
