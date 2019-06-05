@@ -52,27 +52,29 @@ After performing all the steps above, insert the virus file into the main folder
 A few com files can be found in the following link : <br/>
 (https://www.hiren.info/downloads/dos-files)
 
+![current](https://github.com/oshersi/assembly-virus/blob/master/%E2%80%8F%E2%80%8Fv.PNG)
 
-
-```
-Give the example
-```
-
-And repeat
+next, open dosbox and run virus by typing its name in the dosbox window 
 
 ```
-until finished
+virus.exe
 ```
+The output of the virus is displayed quickly, you can see the infection on sys file  <br/>
+The output obtained below : <br/>
 
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
+![output](https://github.com/oshersi/assembly-virus/blob/master/output.png)
+<br>
+To show the effect of the virus, compare the SYS file before and after the infection 
+<br>
+before :
+<br>
+![output1](https://github.com/oshersi/assembly-virus/blob/master/output2.png)
+<br>
+after :
+<br>
+![output2](https://github.com/oshersi/assembly-virus/blob/master/output3.png)
+<br>
+You can see that after the infection, when running the SYS file the virus routine opens and then the original routine of the file, in this case a simple output - incorrect DOS version
 
 
 
